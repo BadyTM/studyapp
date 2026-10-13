@@ -1,0 +1,9 @@
+# Runtime and generation. Deduplication has its own virtualenv (see studyapp/embed),
+# and the tests need pytest, which the app itself does not.
+PySide6>=6.8
+pymupdf>=1.24
+anthropic>=0.40
+alembic>=1.13
+keyring>=25.0
+numpy>=1.26           # embeddings and the blur tests; not used by the running app
+pillow>=10.0          # blur pre-render at import time; not needed at runtime

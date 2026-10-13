@@ -1,0 +1,69 @@
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou provedené změny zachovány i v případě následného výpadku systému?",
+      "options": [
+        "Atomicita",
+        "Konzistence",
+        "Izolace",
+        "Trvalost"
+      ],
+      "correct": "Trvalost",
+      "explanation": "Izolace řeší vzájemné ovlivňování souběžných transakcí, nikoli přežití změn po pádu systému.",
+      "source_quote": "Trvalost znamená, že po úspěšném potvrzení transakce zůstávají její změny v databázi zachovány i v případě následného výpadku systému."
+    },
+    {
+      "type": "mcq",
+      "question": "Která vlastnost se zabývá souběžným během transakcí?",
+      "options": [
+        "Atomicita",
+        "Konzistence",
+        "Izolace",
+        "Trvalost"
+      ],
+      "correct": "Izolace transakcí",
+      "explanation": "Izolace řeší souběh.",
+      "source_quote": "Izolace řeší vzájemné ovlivňování souběžně běžících transakcí."
+    },
+    {
+      "type": "open",
+      "question": "Co znamená izolace transakcí?",
+      "correct": "Že se souběžné transakce navzájem neovlivňují.",
+      "explanation": "Izolace se týká souběhu.",
+      "source_quote": "Izolace je vlastnost, která zajišťuje, že paralelně probíhající transakce se navzájem nijak neruší a výsledek je stejný, jako kdyby běžely jedna po druhé."
+    },
+    {
+      "type": "mcq",
+      "question": "Kolik izolačních úrovní definuje standard SQL?",
+      "options": [
+        "Dvě",
+        "Tři",
+        "Čtyři",
+        "Pět"
+      ],
+      "correct": "Čtyři",
+      "explanation": "Standard definuje čtyři úrovně.",
+      "source_quote": "Míru izolace lze nastavovat pomocí izolačních úrovní, přičemž nižší úroveň znamená vyšší propustnost za cenu rizika nekonzistentního čtení."
+    },
+    {
+      "type": "mcq",
+      "question": "Jak se označuje postup zápisu žurnálu před potvrzením operace?",
+      "options": [
+        "Write-ahead logging",
+        "Rollback",
+        "Rollback",
+        "Checkpointing"
+      ],
+      "correct": "Write-ahead logging",
+      "explanation": "Duplicitní varianta v nabídce.",
+      "source_quote": "Tento postup se označuje jako write-ahead logging."
+    },
+    {
+      "type": "open",
+      "question": "",
+      "correct": "nic",
+      "source_quote": "Konzistence zaručuje, že transakce převede databázi z jednoho konzistentního stavu do jiného konzistentního stavu."
+    }
+  ]
+}

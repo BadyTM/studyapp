@@ -1,0 +1,11 @@
+{
+  "questions": [
+    {
+      "type": "open",
+      "question": "Co znamená izolace transakcí?",
+      "correct": "Že se souběžné transakce navzájem neovlivňují.",
+      "explanation": "Izolace se týká souběhu.",
+      "source_quote": "Izolace je vlastnost, která zajišťuje, že paralelně probíhající transakce se navzájem nijak neruší a výsledek je stejný, jako kdyby běžely jedna po druhé."
+    }
+  ]
+}

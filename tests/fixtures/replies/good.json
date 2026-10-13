@@ -1,0 +1,37 @@
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou provedené změny zachovány i v případě následného výpadku systému?",
+      "options": [
+        "Atomicita",
+        "Konzistence",
+        "Izolace",
+        "Trvalost"
+      ],
+      "correct": "Trvalost",
+      "explanation": "Izolace řeší vzájemné ovlivňování souběžných transakcí, nikoli přežití změn po pádu systému.",
+      "source_quote": "Trvalost znamená, že po úspěšném potvrzení transakce zůstávají její změny v databázi zachovány i v případě následného výpadku systému."
+    },
+    {
+      "type": "mcq",
+      "question": "Co se stane, pokud transakce selže uprostřed svého provádění?",
+      "options": [
+        "Změny zůstanou částečně zapsané",
+        "Systém vrátí databázi do stavu před zahájením transakce",
+        "Transakce se automaticky zopakuje",
+        "Databáze přejde do režimu jen pro čtení"
+      ],
+      "correct": "Systém vrátí databázi do stavu před zahájením transakce",
+      "explanation": "Tomu se říká rollback a plyne to z atomicity.",
+      "source_quote": "Pokud transakce selže uprostřed, systém vrátí databázi do stavu před jejím zahájením; tomu se říká rollback."
+    },
+    {
+      "type": "open",
+      "question": "Vysvětlete, jakým mechanismem se prakticky zajišťuje trvalost transakce.",
+      "correct": "Záznamy transakčního žurnálu se zapíší na trvalé médium dříve, než je klientovi potvrzeno provedení operace. Postup se nazývá write-ahead logging.",
+      "explanation": "Zápis žurnálu předchází potvrzení, takže po výpadku lze změny dohrát.",
+      "source_quote": "Prakticky se zajišťuje zápisem záznamů transakčního žurnálu na trvalé médium dříve, než je klientovi potvrzeno provedení operace."
+    }
+  ]
+}

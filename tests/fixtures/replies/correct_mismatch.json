@@ -1,0 +1,17 @@
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "Která vlastnost se zabývá souběžným během transakcí?",
+      "options": [
+        "Atomicita",
+        "Konzistence",
+        "Izolace",
+        "Trvalost"
+      ],
+      "correct": "Izolace transakcí",
+      "explanation": "Izolace řeší souběh.",
+      "source_quote": "Izolace řeší vzájemné ovlivňování souběžně běžících transakcí."
+    }
+  ]
+}

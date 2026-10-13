@@ -1,0 +1,17 @@
+{
+  "questions": [
+    {
+      "type": "mcq",
+      "question": "Which property guarantees that committed changes survive a system failure?",
+      "options": [
+        "Atomicity",
+        "Consistency",
+        "Isolation",
+        "Durability"
+      ],
+      "correct": "Durability",
+      "explanation": "Durability is about surviving a crash.",
+      "source_quote": "Durability means that after a transaction has been successfully committed, its changes remain in the database even in the event of a subsequent system failure."
+    }
+  ]
+}

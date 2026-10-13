@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StudyApp — tři designové varianty zvoleného layoutu</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#e6e8ea;color:#16181b;
+  font:15px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px 100px}
+header.top{padding:48px 0 20px}
+header.top h1{font-size:27px;font-weight:600;margin:0 0 8px}
+header.top p{margin:0;color:#5a626b;max-width:64ch}
+nav.jump{position:sticky;top:0;z-index:9;background:#e6e8ea;border-bottom:1px solid #cfd3d7;
+  padding:10px 0;margin-bottom:28px;display:flex;gap:8px;flex-wrap:wrap}
+nav.jump a{font-size:13px;text-decoration:none;color:#5a626b;border:1px solid #c2c7cc;
+  padding:5px 11px;background:#fff}
+nav.jump a:hover{color:#16181b}
+h2.set{font-size:21px;font-weight:600;margin:56px 0 4px;padding-top:8px}
+h2.set span{font-weight:400;color:#5a626b}
+.note{color:#5a626b;margin:0 0 10px;max-width:68ch}
+.tok{font:12px/1.7 ui-monospace,"SF Mono",Menlo,monospace;color:#5a626b;
+  background:#f2f4f5;border-left:2px solid #c2c7cc;padding:10px 14px;margin:0 0 26px;max-width:68ch}
+.cap{font:12px/1.4 ui-monospace,"SF Mono",Menlo,monospace;color:#5a626b;margin:30px 0 8px}
+.cap b{color:#16181b;font-weight:600}
+.app{border:1px solid #bfc4c9;overflow:hidden}
+.pane{display:grid;grid-template-columns:46fr 54fr;min-height:430px}
+.blur{filter:blur(4.5px);opacity:.62;user-select:none}
+.hl{background:#ffeaa0;box-shadow:0 0 0 2px #ffeaa0}
+.pg p{margin:0 0 11px}
+.pg h4{margin:0 0 12px;font-size:13px;font-weight:600}
+
+/* ================= 1 · SKRIPTORIUM ================= */
+.s1{background:#f6f6f4;color:#17181a;font-family:system-ui,sans-serif}
+.s1 .top{display:flex;justify-content:space-between;align-items:baseline;
+  padding:16px 34px 0;font-size:12px;color:#8b8d8f;letter-spacing:.02em}
+.s1 .rule{height:1px;background:#d6d5d0;margin:12px 34px 0}
+.s1 .left{padding:46px 34px 34px;border-right:1px solid #d6d5d0;display:flex;flex-direction:column}
+.s1 .q{font:400 21px/1.55 "Iowan Old Style",Georgia,serif;max-width:33ch;margin:0 0 34px}
+.s1 .opt{border-bottom:1px solid #e3e2dd;padding:12px 2px;display:flex;gap:16px;font-size:15px}
+.s1 .opt em{font-style:normal;color:#a5a5a2;font:12px ui-monospace,monospace;width:10px;padding-top:3px}
+.s1 .opt.ok{background:#eef3ec;border-bottom-color:#b9cdb2}
+.s1 .opt.no{background:#f7eeee;border-bottom-color:#dcbcbc;color:#7b4141}
+.s1 .opt.sel{box-shadow:inset 2px 0 0 #17181a}
+.s1 .act{margin-top:auto;padding-top:30px;display:flex;gap:12px;align-items:center}
+.s1 .btn{border:1px solid #17181a;background:transparent;padding:9px 22px;font-size:14px}
+.s1 .btn.ghost{border-color:#c9c8c3;color:#77787a}
+.s1 .kbd{font:11px ui-monospace,monospace;color:#a5a5a2}
+.s1 .note2{font:400 15px/1.7 "Iowan Old Style",Georgia,serif;color:#3c3e42;
+  border-top:1px solid #d6d5d0;padding-top:16px;margin-top:26px;max-width:44ch}
+.s1 .right{background:#eceae4;padding:26px}
+.s1 .meta{font:12px ui-monospace,monospace;color:#8b8d8f;margin-bottom:14px;
+  display:flex;justify-content:space-between}
+.s1 .pg{background:#fdfdfb;border:1px solid #ddddd7;padding:30px 32px;
+  font:13px/1.85 "Iowan Old Style",Georgia,serif;color:#26282b;height:100%}
+.s1 .grade{display:flex;gap:12px;margin-top:auto;padding-top:30px}
+.s1 .grade div{flex:1;border:1px solid #17181a;padding:12px;text-align:center;font-size:14px}
+.s1 .grade .n{border-color:#a86b6b;color:#7b4141}
+.s1 .grade .y{border-color:#4a7a55;color:#2f5c3b}
+
+/* ================= 2 · INSTRUMENT ================= */
+.s2{background:#20242a;color:#dfe3e8;font-family:system-ui,sans-serif}
+.s2 .bar{display:flex;align-items:center;gap:14px;padding:9px 16px;
+  background:#191c21;border-bottom:1px solid #2c313a;font:12px ui-monospace,monospace;color:#7f8894}
+.s2 .bar .dot{width:9px;height:9px;border-radius:50%;background:#3a414b}
+.s2 .bar b{color:#cbd2da;font-weight:500}
+.s2 .pane{min-height:400px}
+.s2 .left{padding:30px 28px;display:flex;flex-direction:column;border-right:1px solid #2c313a}
+.s2 .prog{height:3px;background:#2c313a;margin-bottom:26px}
+.s2 .prog i{display:block;height:100%;background:#6ea8fe}
+.s2 .q{font:400 19px/1.5 Georgia,serif;color:#f0f3f6;margin:0 0 26px;max-width:34ch}
+.s2 .opt{border:1px solid #333a44;background:#262b32;padding:11px 15px;margin-bottom:8px;
+  font-size:14px;display:flex;gap:14px}
+.s2 .opt em{font-style:normal;font:11px ui-monospace,monospace;color:#6f7883}
+.s2 .opt.sel{border-color:#6ea8fe;background:#263243}
+.s2 .opt.ok{border-color:#4f9e70;background:#22332a;color:#bfe5cf}
+.s2 .opt.no{border-color:#a5605f;background:#33262a;color:#efc6c5}
+.s2 .exp{border-left:2px solid #6ea8fe;background:#232830;padding:12px 15px;
+  font-size:13px;line-height:1.65;color:#b9c1cb;margin:18px 0 0}
+.s2 .act{margin-top:auto;padding-top:26px;display:flex;gap:10px}
+.s2 .btn{border:1px solid #4a525d;background:#2b313a;color:#dfe3e8;padding:9px 18px;font-size:13px}
+.s2 .btn.pri{background:#6ea8fe;border-color:#6ea8fe;color:#141a22}
+.s2 .grade{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:26px}
+.s2 .grade div{padding:12px;text-align:center;font-size:14px;border:1px solid #4a525d}
+.s2 .grade .y{border-color:#4f9e70;color:#8fd6ab;background:#22332a}
+.s2 .grade .n{border-color:#a5605f;color:#e8a9a8;background:#33262a}
+.s2 .right{background:#1a1d22;padding:14px;display:flex;gap:12px}
+.s2 .thumbs{display:flex;flex-direction:column;gap:7px;width:44px}
+.s2 .thumbs div{height:56px;background:#262b32;border:1px solid #333a44}
+.s2 .thumbs div.on{border-color:#6ea8fe}
+.s2 .pgwrap{flex:1}
+.s2 .meta{font:11px ui-monospace,monospace;color:#7f8894;margin-bottom:10px;
+  display:flex;justify-content:space-between}
+.s2 .pg{background:#f7f6f3;color:#22262b;padding:26px 28px;font:13px/1.8 Georgia,serif}
+.s2 .foot{background:#191c21;border-top:1px solid #2c313a;padding:7px 16px;
+  font:11px ui-monospace,monospace;color:#6f7883;display:flex;gap:20px}
+
+/* ================= 3 · KARTY ================= */
+.s3{background:#eef1f6;color:#1b2230;font-family:system-ui,sans-serif}
+.s3 .head{display:flex;align-items:center;gap:14px;padding:16px 22px 0}
+.s3 .ring{width:44px;height:44px;border-radius:50%;
+  background:conic-gradient(#4c63b6 0 35%,#d9deea 35% 100%);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.s3 .ring b{width:34px;height:34px;border-radius:50%;background:#eef1f6;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#4c63b6}
+.s3 .dots{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+.s3 .dots i{width:13px;height:5px;border-radius:3px;background:#d3d9e6;display:block}
+.s3 .dots i.ok{background:#4f9e70}.s3 .dots i.no{background:#cc7070}.s3 .dots i.now{background:#4c63b6}
+.s3 .pane{padding:16px 22px 22px;gap:16px;min-height:400px}
+.s3 .card{background:#fff;border:1px solid #dde2eb;border-radius:14px;padding:26px 28px;
+  display:flex;flex-direction:column}
+.s3 .tag{display:inline-block;font-size:11px;font-weight:500;border-radius:20px;
+  padding:3px 11px;background:#e6eaf7;color:#4c63b6;margin-bottom:16px}
+.s3 .tag.open{background:#fdefdc;color:#8a5a12}
+.s3 .q{font-size:17px;line-height:1.5;margin:0 0 22px}
+.s3 .opt{border:1px solid #e1e6ee;border-radius:10px;padding:12px 15px;margin-bottom:9px;
+  font-size:14px;display:flex;gap:12px}
+.s3 .opt em{font-style:normal;color:#98a1b3;font-size:12px;padding-top:2px}
+.s3 .opt.sel{border-color:#4c63b6;background:#f2f4fc}
+.s3 .opt.ok{border-color:#4f9e70;background:#eef7f1;color:#2c6146}
+.s3 .opt.no{border-color:#cc7070;background:#fcf0f0;color:#8c3f3f}
+.s3 .exp{background:#f5f7fb;border-radius:10px;padding:13px 16px;font-size:13px;
+  line-height:1.6;color:#4a5364;margin-top:16px}
+.s3 .act{margin-top:auto;padding-top:22px;display:flex;gap:10px}
+.s3 .btn{border:1px solid #ccd3e0;border-radius:10px;background:#fff;padding:10px 20px;font-size:14px}
+.s3 .btn.pri{background:#4c63b6;border-color:#4c63b6;color:#fff}
+.s3 .grade{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:auto;padding-top:22px}
+.s3 .grade div{border-radius:10px;padding:13px;text-align:center;font-size:14px;border:1px solid}
+.s3 .grade .y{border-color:#4f9e70;background:#eef7f1;color:#2c6146}
+.s3 .grade .n{border-color:#cc7070;background:#fcf0f0;color:#8c3f3f}
+.s3 .right{background:#fff;border:1px solid #dde2eb;border-radius:14px;padding:16px;overflow:hidden}
+.s3 .meta{font-size:12px;color:#8892a4;margin-bottom:12px;display:flex;justify-content:space-between}
+.s3 .pg{background:#fcfcfd;border:1px solid #e7eaf0;border-radius:10px;
+  padding:24px 26px;font:13px/1.8 Georgia,serif;color:#252b36}
+
+/* ================= 4 · SKRIPTORIUM V KARTÁCH ================= */
+.s4{background:#e7e5df;color:#17181a;font-family:system-ui,sans-serif}
+.s4 .head{display:flex;align-items:baseline;gap:14px;padding:18px 20px 0;
+  font-size:12px;color:#8a877f}
+.s4 .head .grow{flex:1}
+.s4 .track{height:2px;background:#d3d0c8;flex:1;max-width:180px;align-self:center}
+.s4 .track i{display:block;height:100%;background:#8a877f}
+.s4 .pane{padding:14px 20px 20px;gap:14px;min-height:400px}
+.s4 .card{background:#fbfaf7;border:1px solid #dcd9d2;border-radius:14px;
+  padding:34px 34px 28px;display:flex;flex-direction:column}
+.s4 .q{font:400 21px/1.55 "Iowan Old Style",Georgia,serif;max-width:33ch;margin:0 0 30px}
+.s4 .opt{border:1px solid #e2dfd8;border-radius:10px;background:#fff;
+  padding:12px 15px;margin-bottom:9px;display:flex;gap:14px;font-size:15px}
+.s4 .opt em{font-style:normal;color:#a8a59d;font:12px ui-monospace,monospace;width:10px;padding-top:3px}
+.s4 .opt.sel{border-color:#17181a;box-shadow:inset 0 0 0 1px #17181a}
+.s4 .opt.ok{border-color:#4a7a55;background:#eef3ec}
+.s4 .opt.no{border-color:#a86b6b;background:#f7eeee;color:#7b4141}
+.s4 .note2{font:400 15px/1.7 "Iowan Old Style",Georgia,serif;color:#3c3e42;
+  border-top:1px solid #e2dfd8;padding-top:18px;margin:26px 0 0;max-width:44ch}
+.s4 .act{margin-top:auto;padding-top:28px;display:flex;gap:12px;align-items:center}
+.s4 .btn{border:1px solid #17181a;border-radius:9px;background:transparent;
+  padding:9px 22px;font-size:14px}
+.s4 .btn.ghost{border-color:#cdcac2;color:#78766f}
+.s4 .kbd{font:11px ui-monospace,monospace;color:#a8a59d}
+.s4 .grade{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:auto;padding-top:28px}
+.s4 .grade div{border:1px solid;border-radius:9px;padding:13px;text-align:center;font-size:14px}
+.s4 .grade .y{border-color:#4a7a55;color:#2f5c3b}
+.s4 .grade .n{border-color:#a86b6b;color:#7b4141}
+.s4 .right{background:#fbfaf7;border:1px solid #dcd9d2;border-radius:14px;padding:16px}
+.s4 .meta{font:12px ui-monospace,monospace;color:#8a877f;margin-bottom:12px;
+  display:flex;justify-content:space-between}
+.s4 .pg{background:#fff;border:1px solid #e6e3dc;border-radius:10px;padding:28px 30px;
+  font:13px/1.85 "Iowan Old Style",Georgia,serif;color:#26282b}
+.s4 .dots{display:flex;gap:4px;flex-wrap:wrap;max-width:250px}
+.s4 .dots i{width:11px;height:4px;border-radius:2px;background:#d3d0c8;display:block}
+.s4 .dots i.ok{background:#8fae94}.s4 .dots i.no{background:#c79b9b}
+.s4 .dots i.now{background:#17181a}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+<h1>Tři varianty zvoleného layoutu</h1>
+<p>Stejná struktura ve všech třech: vycentrovaná otázka vlevo, náhled PDF trvale vpravo,
+rozmazaný do odpovědi. Liší se chrome, typografie a míra informací kolem otázky.
+Mock data z databázových systémů.</p>
+</header>
+
+<nav class="jump">
+<a href="#v1">1 · Skriptorium</a>
+<a href="#v2">2 · Instrument</a>
+<a href="#v3">3 · Karty</a>
+<a href="#v4" style="border-color:#17181a;color:#17181a">4 · Skriptorium v kartách</a>
+</nav>
+
+<!-- ===================== 1 ===================== -->
+<h2 class="set" id="v1">1 · Skriptorium <span>· dvě stránky knihy vedle sebe</span></h2>
+<p class="note">Okno se chová jako rozevřená kniha: vlevo otázka vysázená patkovým písmem,
+vpravo skutečná stránka. Žádné rámečky ani barevné plochy navíc, hierarchie stojí na
+linkách a bílém místě. Barva se objeví jen tam, kde nese informaci — u vyhodnocení
+a u žlutého zvýraznění v PDF.</p>
+<p class="tok">papír #f6f6f4 · lišta #eceae4 · inkoust #17181a · linka #d6d5d0
+· správně #4a7a55 · špatně #a86b6b · marker #ffeaa0<br>
+Iowan Old Style / Georgia pro otázku i text stránky · system sans pro ovládání · bez zaoblení</p>
+
+<div class="cap"><b>1a</b> — multiple choice, před odpovědí (náhled rozmazaný)</div>
+<div class="app s1">
+  <div class="top"><span>Session · mistakes only</span><span>7 / 20</span></div>
+  <div class="rule"></div>
+  <div class="pane">
+    <div class="left">
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt"><em>1</em>Atomicita</div>
+      <div class="opt"><em>2</em>Konzistence</div>
+      <div class="opt sel"><em>3</em>Izolace</div>
+      <div class="opt"><em>4</em>Trvalost</div>
+      <div class="act">
+        <span class="btn">Submit</span>
+        <span class="kbd">1–4 select · ⏎ submit</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>&nbsp;</span><span>locked</span></div>
+      <div class="pg blur">
+        <h4>6.2 Vlastnosti transakcí</h4>
+        <p>Transakce je posloupnost operací nad databází, která se z pohledu okolí chová
+        jako jediná nedělitelná jednotka práce.</p>
+        <p>Souhrnně se požadované vlastnosti označují zkratkou ACID. V následujících
+        odstavcích rozebereme každou z nich zvlášť a ukážeme si, jakými mechanismy je
+        systém zajišťuje.</p>
+        <p>Atomicita znamená, že dílčí operace transakce nelze pozorovat samostatně.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>1b</b> — po odpovědi: zaostřeno, skok na zdroj, metadata odkryta</div>
+<div class="app s1">
+  <div class="top"><span>Session · mistakes only</span><span>7 / 20</span></div>
+  <div class="rule"></div>
+  <div class="pane">
+    <div class="left">
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt" style="color:#a5a5a2"><em>1</em>Atomicita</div>
+      <div class="opt" style="color:#a5a5a2"><em>2</em>Konzistence</div>
+      <div class="opt no"><em>3</em>Izolace</div>
+      <div class="opt ok"><em>4</em>Trvalost</div>
+      <p class="note2">Izolace řeší vzájemné ovlivňování souběžných transakcí,
+      nikoli přežití změn po pádu systému.</p>
+      <div class="act">
+        <span class="btn">Next</span>
+        <span class="btn ghost">☆ Star</span>
+        <span class="kbd">→ next</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>6.2.4 Trvalost</span><span>p. 44 / 200</span></div>
+      <div class="pg">
+        <h4>6.2.4 Trvalost</h4>
+        <p>Poslední z vlastností ACID se týká chování systému po potvrzení transakce.
+        Zatímco izolace se zabývá souběžným během, trvalost cílí na odolnost vůči výpadku.</p>
+        <p><span class="hl">Trvalost znamená, že po úspěšném potvrzení transakce zůstávají
+        její změny v databázi zachovány i v případě následného výpadku systému.</span>
+        Prakticky se zajišťuje zápisem záznamů transakčního žurnálu na trvalé médium dříve,
+        než je klientovi potvrzeno provedení operace.</p>
+        <p>Tento postup se označuje jako write-ahead logging.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>1c</b> — otevřená otázka před odhalením</div>
+<div class="app s1">
+  <div class="top"><span>Session · both types</span><span>11 / 20</span></div>
+  <div class="rule"></div>
+  <div class="pane" style="min-height:340px">
+    <div class="left">
+      <p class="q" style="margin-top:auto">Čím se liší clusterovaný a neclusterovaný index
+      a proč může na jedné tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <div class="act" style="margin-top:auto">
+        <span class="btn">Reveal answer</span>
+        <span class="kbd">␣ reveal · answer in your head first</span>
+      </div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>&nbsp;</span><span>locked</span></div>
+      <div class="pg blur">
+        <h4>8.3 Typy indexů</h4>
+        <p>Index je pomocná datová struktura, která zrychluje vyhledávání záznamů podle
+        hodnot vybraných atributů za cenu vyšších nároků na úložiště a pomalejších zápisů.</p>
+        <p>Podle vztahu k fyzickému uložení dat rozlišujeme indexy clusterované
+        a neclusterované.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>1d</b> — otevřená otázka po odhalení, self-grading</div>
+<div class="app s1">
+  <div class="top"><span>Session · both types</span><span>11 / 20</span></div>
+  <div class="rule"></div>
+  <div class="pane" style="min-height:380px">
+    <div class="left">
+      <p class="q">Čím se liší clusterovaný a neclusterovaný index a proč může na jedné
+      tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <p class="note2" style="border-top:0;margin-top:0;padding-top:0">Clusterovaný index
+      určuje fyzické pořadí záznamů v tabulce — data jsou uložena přímo v jeho listech,
+      a proto může být na tabulce jen jeden. Neclusterovaný index je samostatná struktura
+      obsahující odkazy na řádky.</p>
+      <div class="grade">
+        <div class="y">I knew it &nbsp;<span class="kbd">Y</span></div>
+        <div class="n">I didn't &nbsp;<span class="kbd">N</span></div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>8.3.1 Clusterovaný index</span><span>p. 137 / 200</span></div>
+      <div class="pg">
+        <h4>8.3.1 Clusterovaný index</h4>
+        <p>U clusterovaného indexu nejsou v listech uloženy odkazy, ale přímo celé řádky
+        tabulky. Vyhledání podle klíče tedy nevyžaduje druhý přístup k datové stránce.</p>
+        <p><span class="hl">Clusterovaný index určuje fyzické pořadí záznamů v tabulce,
+        a proto může na jedné tabulce existovat nejvýše jeden.</span> Neclusterovaný index
+        je oproti tomu samostatná struktura, jejíž listy obsahují odkazy na příslušné řádky.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 2 ===================== -->
+<h2 class="set" id="v2">2 · Instrument <span>· tmavé chrome, světlá stránka, hodně kontextu</span></h2>
+<p class="note">Rámec aplikace je tmavý, takže stránka PDF svítí jako jediná světlá plocha
+a oko jde samo k ní. Nahoře stavová lišta, dole trvalý pruh klávesových zkratek, vedle
+náhledu proužek náhledů stránek. Nejvíc informací na obrazovce z těchto tří a nejšetrnější
+k očím při večerním učení.</p>
+<p class="tok">chrome #20242a / #191c21 · linka #2c313a · text #dfe3e8 · stránka #f7f6f3
+· akcent #6ea8fe · správně #4f9e70 · špatně #a5605f · marker #ffeaa0<br>
+Georgia pro otázku a text stránky · mono pro metadata a zkratky · bez zaoblení</p>
+
+<div class="cap"><b>2a</b> — multiple choice, před odpovědí</div>
+<div class="app s2">
+  <div class="bar"><span class="dot"></span><b>Practice</b><span>mistakes only · 20 questions</span>
+    <span style="margin-left:auto">7 / 20 · 5 correct</span></div>
+  <div class="pane">
+    <div class="left">
+      <div class="prog"><i style="width:35%"></i></div>
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt"><em>1</em>Atomicita</div>
+      <div class="opt"><em>2</em>Konzistence</div>
+      <div class="opt sel"><em>3</em>Izolace</div>
+      <div class="opt"><em>4</em>Trvalost</div>
+      <div class="act"><span class="btn pri">Submit</span>
+        <span class="btn" style="opacity:.5">Source locked</span></div>
+    </div>
+    <div class="right">
+      <div class="thumbs"><div></div><div class="on"></div><div></div><div></div><div></div></div>
+      <div class="pgwrap">
+        <div class="meta"><span>preview locked</span><span>100 %</span></div>
+        <div class="pg blur">
+          <h4>6.2 Vlastnosti transakcí</h4>
+          <p>Transakce je posloupnost operací nad databází, která se z pohledu okolí chová
+          jako jediná nedělitelná jednotka práce.</p>
+          <p>Souhrnně se požadované vlastnosti označují zkratkou ACID. V následujících
+          odstavcích rozebereme každou z nich zvlášť.</p>
+          <p>Atomicita znamená, že dílčí operace transakce nelze pozorovat samostatně.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>1–4 select</span><span>⏎ submit</span><span>␣ source</span>
+    <span>→ next</span><span>S star</span><span style="margin-left:auto">db.sqlite · WAL</span></div>
+</div>
+
+<div class="cap"><b>2b</b> — po odpovědi</div>
+<div class="app s2">
+  <div class="bar"><span class="dot" style="background:#a5605f"></span><b>Practice</b>
+    <span>wrong · added to mistakes queue</span>
+    <span style="margin-left:auto">7 / 20 · 5 correct · 2 wrong</span></div>
+  <div class="pane">
+    <div class="left">
+      <div class="prog"><i style="width:35%"></i></div>
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt" style="opacity:.45"><em>1</em>Atomicita</div>
+      <div class="opt" style="opacity:.45"><em>2</em>Konzistence</div>
+      <div class="opt no"><em>3</em>Izolace</div>
+      <div class="opt ok"><em>4</em>Trvalost</div>
+      <div class="exp">Izolace řeší vzájemné ovlivňování souběžných transakcí, nikoli
+      přežití změn po pádu systému.</div>
+      <div class="act"><span class="btn pri">Next</span><span class="btn">☆ Star</span>
+        <span class="btn">Open in bank</span></div>
+    </div>
+    <div class="right">
+      <div class="thumbs"><div></div><div></div><div></div><div class="on"></div><div></div></div>
+      <div class="pgwrap">
+        <div class="meta"><span>p. 44 · 6.2.4 Trvalost</span><span>100 %</span></div>
+        <div class="pg">
+          <h4>6.2.4 Trvalost</h4>
+          <p>Poslední z vlastností ACID se týká chování systému po potvrzení transakce.</p>
+          <p><span class="hl">Trvalost znamená, že po úspěšném potvrzení transakce zůstávají
+          její změny v databázi zachovány i v případě následného výpadku systému.</span>
+          Prakticky se zajišťuje zápisem záznamů transakčního žurnálu na trvalé médium
+          dříve, než je klientovi potvrzeno provedení operace.</p>
+          <p>Tento postup se označuje jako write-ahead logging.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>→ next</span><span>S star</span><span>B open in bank</span>
+    <span style="margin-left:auto">chapter 6 · Transakce</span></div>
+</div>
+
+<div class="cap"><b>2c</b> — otevřená otázka: před odhalením a po něm</div>
+<div class="app s2">
+  <div class="bar"><span class="dot"></span><b>Practice</b><span>open · answer in your head</span>
+    <span style="margin-left:auto">11 / 20</span></div>
+  <div class="pane" style="min-height:300px">
+    <div class="left">
+      <div class="prog"><i style="width:55%"></i></div>
+      <p class="q" style="margin:auto 0">Čím se liší clusterovaný a neclusterovaný index
+      a proč může na jedné tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <div class="act"><span class="btn pri">Reveal answer &nbsp;␣</span></div>
+    </div>
+    <div class="right">
+      <div class="thumbs"><div></div><div class="on"></div><div></div><div></div><div></div></div>
+      <div class="pgwrap">
+        <div class="meta"><span>preview locked</span><span>100 %</span></div>
+        <div class="pg blur">
+          <h4>8.3 Typy indexů</h4>
+          <p>Index je pomocná datová struktura, která zrychluje vyhledávání záznamů podle
+          hodnot vybraných atributů za cenu vyšších nároků na úložiště.</p>
+          <p>Podle vztahu k fyzickému uložení dat rozlišujeme indexy clusterované
+          a neclusterované.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>␣ reveal</span><span style="margin-left:auto">no skip</span></div>
+</div>
+<div class="app s2" style="margin-top:14px">
+  <div class="bar"><span class="dot" style="background:#6ea8fe"></span><b>Practice</b>
+    <span>revealed · grade yourself</span><span style="margin-left:auto">11 / 20</span></div>
+  <div class="pane" style="min-height:300px">
+    <div class="left">
+      <div class="prog"><i style="width:55%"></i></div>
+      <p class="q">Čím se liší clusterovaný a neclusterovaný index a proč může na jedné
+      tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <div class="exp">Clusterovaný index určuje fyzické pořadí záznamů v tabulce — data
+      jsou uložena přímo v jeho listech, a proto může být na tabulce jen jeden.
+      Neclusterovaný index je samostatná struktura obsahující odkazy na řádky.</div>
+      <div class="grade"><div class="y">I knew it &nbsp;Y</div><div class="n">I didn't &nbsp;N</div></div>
+    </div>
+    <div class="right">
+      <div class="thumbs"><div></div><div></div><div class="on"></div><div></div><div></div></div>
+      <div class="pgwrap">
+        <div class="meta"><span>p. 137 · 8.3.1 Clusterovaný index</span><span>100 %</span></div>
+        <div class="pg">
+          <h4>8.3.1 Clusterovaný index</h4>
+          <p>U clusterovaného indexu nejsou v listech uloženy odkazy, ale přímo celé řádky
+          tabulky.</p>
+          <p><span class="hl">Clusterovaný index určuje fyzické pořadí záznamů v tabulce,
+          a proto může na jedné tabulce existovat nejvýše jeden.</span> Neclusterovaný index
+          je oproti tomu samostatná struktura, jejíž listy obsahují odkazy na příslušné řádky.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Y knew</span><span>N didn't</span><span>S star</span>
+    <span style="margin-left:auto">chapter 8 · Indexy</span></div>
+</div>
+
+<!-- ===================== 3 ===================== -->
+<h2 class="set" id="v3">3 · Karty <span>· měkké světlé UI, stav nese barva</span></h2>
+<p class="note">Otázka i náhled jsou samostatné karty na tónovaném plátně. Nahoře prstenec
+s postupem a proužek teček za každou otázku v session — hned vidíš, kde jsi a jak ti to jde.
+Nejpřívětivější a nejrychleji čitelné, ale kolem otázky je nejvíc věcí, které nejsou otázka.</p>
+<p class="tok">plátno #eef1f6 · karta #fff · linka #dde2eb · akcent #4c63b6
+· správně #4f9e70 · špatně #cc7070 · marker #ffeaa0<br>
+system sans všude · Georgia jen pro text stránky · zaoblení 14 px karty / 10 px prvky</p>
+
+<div class="cap"><b>3a</b> — multiple choice, před odpovědí</div>
+<div class="app s3">
+  <div class="head">
+    <div class="ring"><b>7/20</b></div>
+    <div class="dots">
+      <i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i>
+      <i class="ok"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <span style="font-size:12px;color:#8892a4">mistakes only</span>
+  </div>
+  <div class="pane">
+    <div class="card">
+      <span class="tag">multiple choice · chapter 6</span>
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt"><em>1</em>Atomicita</div>
+      <div class="opt"><em>2</em>Konzistence</div>
+      <div class="opt sel"><em>3</em>Izolace</div>
+      <div class="opt"><em>4</em>Trvalost</div>
+      <div class="act"><span class="btn pri">Submit</span>
+        <span class="btn" style="opacity:.45">Source locked</span></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>Source</span><span>revealed after you answer</span></div>
+      <div class="pg blur">
+        <h4>6.2 Vlastnosti transakcí</h4>
+        <p>Transakce je posloupnost operací nad databází, která se z pohledu okolí chová
+        jako jediná nedělitelná jednotka práce.</p>
+        <p>Souhrnně se požadované vlastnosti označují zkratkou ACID. V následujících
+        odstavcích rozebereme každou z nich zvlášť.</p>
+        <p>Atomicita znamená, že dílčí operace transakce nelze pozorovat samostatně.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>3b</b> — po odpovědi</div>
+<div class="app s3">
+  <div class="head">
+    <div class="ring"><b>7/20</b></div>
+    <div class="dots">
+      <i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i>
+      <i class="ok"></i><i class="no"></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <span style="font-size:12px;color:#cc7070">added to mistakes</span>
+  </div>
+  <div class="pane">
+    <div class="card">
+      <span class="tag">multiple choice · chapter 6</span>
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt" style="opacity:.45"><em>1</em>Atomicita</div>
+      <div class="opt" style="opacity:.45"><em>2</em>Konzistence</div>
+      <div class="opt no"><em>3</em>Izolace</div>
+      <div class="opt ok"><em>4</em>Trvalost</div>
+      <div class="exp">Izolace řeší vzájemné ovlivňování souběžných transakcí, nikoli
+      přežití změn po pádu systému.</div>
+      <div class="act"><span class="btn pri">Next</span><span class="btn">☆</span></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>p. 44 · 6.2.4 Trvalost</span><span>100 %</span></div>
+      <div class="pg">
+        <h4>6.2.4 Trvalost</h4>
+        <p>Poslední z vlastností ACID se týká chování systému po potvrzení transakce.</p>
+        <p><span class="hl">Trvalost znamená, že po úspěšném potvrzení transakce zůstávají
+        její změny v databázi zachovány i v případě následného výpadku systému.</span>
+        Prakticky se zajišťuje zápisem záznamů transakčního žurnálu na trvalé médium dříve,
+        než je klientovi potvrzeno provedení operace.</p>
+        <p>Tento postup se označuje jako write-ahead logging.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>3c</b> — otevřená otázka: před odhalením a po něm</div>
+<div class="app s3">
+  <div class="head">
+    <div class="ring" style="background:conic-gradient(#4c63b6 0 55%,#d9deea 55% 100%)"><b>11/20</b></div>
+    <div class="dots">
+      <i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i>
+      <i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i>
+      <i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <span style="font-size:12px;color:#8892a4">open</span>
+  </div>
+  <div class="pane" style="min-height:300px">
+    <div class="card">
+      <span class="tag open">open · chapter 8</span>
+      <p class="q" style="margin:auto 0">Čím se liší clusterovaný a neclusterovaný index
+      a proč může na jedné tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <div class="act"><span class="btn pri">Reveal answer</span>
+        <span style="font-size:12px;color:#8892a4;align-self:center">answer in your head first</span></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>Source</span><span>revealed after you answer</span></div>
+      <div class="pg blur">
+        <h4>8.3 Typy indexů</h4>
+        <p>Index je pomocná datová struktura, která zrychluje vyhledávání záznamů podle
+        hodnot vybraných atributů.</p>
+        <p>Podle vztahu k fyzickému uložení dat rozlišujeme indexy clusterované
+        a neclusterované.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="app s3" style="margin-top:14px">
+  <div class="head">
+    <div class="ring" style="background:conic-gradient(#4c63b6 0 55%,#d9deea 55% 100%)"><b>11/20</b></div>
+    <div class="dots">
+      <i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i>
+      <i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i>
+      <i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+    <span style="font-size:12px;color:#8892a4">revealed</span>
+  </div>
+  <div class="pane" style="min-height:300px">
+    <div class="card">
+      <span class="tag open">open · chapter 8</span>
+      <p class="q">Čím se liší clusterovaný a neclusterovaný index a proč může na jedné
+      tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <div class="exp">Clusterovaný index určuje fyzické pořadí záznamů v tabulce — data
+      jsou uložena přímo v jeho listech, a proto může být na tabulce jen jeden.
+      Neclusterovaný index je samostatná struktura obsahující odkazy na řádky.</div>
+      <div class="grade"><div class="y">I knew it</div><div class="n">I didn't</div></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>p. 137 · 8.3.1 Clusterovaný index</span><span>100 %</span></div>
+      <div class="pg">
+        <h4>8.3.1 Clusterovaný index</h4>
+        <p>U clusterovaného indexu nejsou v listech uloženy odkazy, ale přímo celé řádky
+        tabulky.</p>
+        <p><span class="hl">Clusterovaný index určuje fyzické pořadí záznamů v tabulce,
+        a proto může na jedné tabulce existovat nejvýše jeden.</span> Neclusterovaný index
+        je oproti tomu samostatná struktura, jejíž listy obsahují odkazy na příslušné řádky.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== 4 ===================== -->
+<h2 class="set" id="v4">4 · Skriptorium v kartách <span>· typografie a klid z 1, prezentace z 3</span></h2>
+<p class="note">Papír z varianty 1 se stal kartou: stejné patkové písmo, stejná zdrženlivost
+s barvou, ale otázka a zdroj jsou dvě samostatné desky na tónovaném plátně. Plátno je
+tmavší odstín téhož papíru, ne modrošedá — díky tomu drží celek jeden materiál a karty
+nevypadají nalepené.</p>
+<p class="tok">plátno #e7e5df · karta #fbfaf7 · stránka #fff · linka #dcd9d2 · inkoust #17181a
+· správně #4a7a55 · špatně #a86b6b · marker #ffeaa0<br>
+Iowan Old Style / Georgia pro otázku i stránku · system sans pro ovládání · zaoblení 14 px karty / 9 px tlačítka</p>
+<p class="note"><b>Hlavička s tečkami</b> ukazuje výsledek každé zodpovězené otázky session;
+aktuální otázka je vždy inkoustová, budoucí prázdné, takže z proužku nejde nic vyčíst dopředu.
+Barvy jsou ztlumené do papírové palety, aby proužek nepřebil otázku. Nad ~30 otázek se tečky
+nevejdou a hlavička spadne zpět na vlasovou linku — viz 4e.</p>
+
+<div class="cap"><b>4a</b> — multiple choice, před odpovědí</div>
+<div class="app s4">
+  <div class="head">
+    <div class="dots"><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="grow"></span><span>7 / 20 · mistakes only</span></div>
+  <div class="pane">
+    <div class="card">
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt"><em>1</em>Atomicita</div>
+      <div class="opt"><em>2</em>Konzistence</div>
+      <div class="opt sel"><em>3</em>Izolace</div>
+      <div class="opt"><em>4</em>Trvalost</div>
+      <div class="act"><span class="btn">Submit</span>
+        <span class="kbd">1–4 select · ⏎ submit</span></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>&nbsp;</span><span>locked</span></div>
+      <div class="pg blur">
+        <h4>6.2 Vlastnosti transakcí</h4>
+        <p>Transakce je posloupnost operací nad databází, která se z pohledu okolí chová
+        jako jediná nedělitelná jednotka práce.</p>
+        <p>Souhrnně se požadované vlastnosti označují zkratkou ACID. V následujících
+        odstavcích rozebereme každou z nich zvlášť a ukážeme si, jakými mechanismy je
+        systém zajišťuje.</p>
+        <p>Atomicita znamená, že dílčí operace transakce nelze pozorovat samostatně.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>4b</b> — po odpovědi: zaostřeno, skok na zdroj, metadata odkryta</div>
+<div class="app s4">
+  <div class="head">
+    <div class="dots"><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="no"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="grow"></span><span>7 / 20 · mistakes only</span></div>
+  <div class="pane">
+    <div class="card">
+      <p class="q">Která vlastnost transakce zaručuje, že po jejím potvrzení zůstanou
+      provedené změny zachovány i v případě následného výpadku systému?</p>
+      <div class="opt" style="color:#a8a59d"><em>1</em>Atomicita</div>
+      <div class="opt" style="color:#a8a59d"><em>2</em>Konzistence</div>
+      <div class="opt no"><em>3</em>Izolace</div>
+      <div class="opt ok"><em>4</em>Trvalost</div>
+      <p class="note2">Izolace řeší vzájemné ovlivňování souběžných transakcí,
+      nikoli přežití změn po pádu systému.</p>
+      <div class="act"><span class="btn">Next</span><span class="btn ghost">☆ Star</span>
+        <span class="kbd">→ next</span></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>6.2.4 Trvalost</span><span>p. 44 / 200</span></div>
+      <div class="pg">
+        <h4>6.2.4 Trvalost</h4>
+        <p>Poslední z vlastností ACID se týká chování systému po potvrzení transakce.
+        Zatímco izolace se zabývá souběžným během, trvalost cílí na odolnost vůči výpadku.</p>
+        <p><span class="hl">Trvalost znamená, že po úspěšném potvrzení transakce zůstávají
+        její změny v databázi zachovány i v případě následného výpadku systému.</span>
+        Prakticky se zajišťuje zápisem záznamů transakčního žurnálu na trvalé médium dříve,
+        než je klientovi potvrzeno provedení operace.</p>
+        <p>Tento postup se označuje jako write-ahead logging.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>4c</b> — otevřená otázka před odhalením</div>
+<div class="app s4">
+  <div class="head">
+    <div class="dots"><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="grow"></span><span>11 / 20 · both types</span></div>
+  <div class="pane" style="min-height:330px">
+    <div class="card">
+      <p class="q" style="margin:auto 0 0">Čím se liší clusterovaný a neclusterovaný index
+      a proč může na jedné tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <div class="act"><span class="btn">Reveal answer</span>
+        <span class="kbd">␣ reveal · answer in your head first</span></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>&nbsp;</span><span>locked</span></div>
+      <div class="pg blur">
+        <h4>8.3 Typy indexů</h4>
+        <p>Index je pomocná datová struktura, která zrychluje vyhledávání záznamů podle
+        hodnot vybraných atributů za cenu vyšších nároků na úložiště a pomalejších zápisů.</p>
+        <p>Podle vztahu k fyzickému uložení dat rozlišujeme indexy clusterované
+        a neclusterované.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>4d</b> — otevřená otázka po odhalení, self-grading</div>
+<div class="app s4">
+  <div class="head">
+    <div class="dots"><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="no"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="grow"></span><span>11 / 20 · both types</span></div>
+  <div class="pane" style="min-height:360px">
+    <div class="card">
+      <p class="q">Čím se liší clusterovaný a neclusterovaný index a proč může na jedné
+      tabulce existovat nejvýše jeden clusterovaný index?</p>
+      <p class="note2" style="border-top:0;margin-top:0;padding-top:0">Clusterovaný index
+      určuje fyzické pořadí záznamů v tabulce — data jsou uložena přímo v jeho listech,
+      a proto může být na tabulce jen jeden. Neclusterovaný index je samostatná struktura
+      obsahující odkazy na řádky.</p>
+      <div class="grade">
+        <div class="y">I knew it &nbsp;<span class="kbd">Y</span></div>
+        <div class="n">I didn't &nbsp;<span class="kbd">N</span></div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>8.3.1 Clusterovaný index</span><span>p. 137 / 200</span></div>
+      <div class="pg">
+        <h4>8.3.1 Clusterovaný index</h4>
+        <p>U clusterovaného indexu nejsou v listech uloženy odkazy, ale přímo celé řádky
+        tabulky. Vyhledání podle klíče tedy nevyžaduje druhý přístup k datové stránce.</p>
+        <p><span class="hl">Clusterovaný index určuje fyzické pořadí záznamů v tabulce,
+        a proto může na jedné tabulce existovat nejvýše jeden.</span> Neclusterovaný index
+        je oproti tomu samostatná struktura, jejíž listy obsahují odkazy na příslušné řádky.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>4e</b> — dlouhá session (60 otázek): tečky se nevejdou, hlavička spadne zpět na linku</div>
+<div class="app s4">
+  <div class="head"><span>Practice · whole bank</span><span class="grow"></span>
+    <span class="track"><i style="width:38%"></i></span><span>23 / 60</span></div>
+  <div class="pane" style="min-height:300px">
+    <div class="card">
+      <p class="q">Ve které normální formě jsou odstraněny tranzitivní závislosti
+      neklíčových atributů na klíči?</p>
+      <div class="opt"><em>1</em>První normální forma</div>
+      <div class="opt"><em>2</em>Druhá normální forma</div>
+      <div class="opt sel"><em>3</em>Třetí normální forma</div>
+      <div class="opt"><em>4</em>Boyce-Coddova normální forma</div>
+      <div class="act"><span class="btn">Submit</span><span class="kbd">⏎ submit</span></div>
+    </div>
+    <div class="right">
+      <div class="meta"><span>&nbsp;</span><span>locked</span></div>
+      <div class="pg blur">
+        <h4>4.4 Normální formy</h4>
+        <p>Normalizace je postupné rozkládání relací tak, aby se odstranily redundance
+        a aktualizační anomálie.</p>
+        <p>Každá vyšší normální forma předpokládá splnění všech nižších.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cap"><b>4f</b> — shrnutí po session ve stejné paletě</div>
+<div class="app s4">
+  <div class="head"><span>Session finished</span><span class="grow"></span><span>18 min</span></div>
+  <div style="padding:14px 20px 20px">
+    <div class="card" style="align-items:center;text-align:center;padding:44px 34px">
+      <div style="font:400 46px/1 'Iowan Old Style',Georgia,serif;margin-bottom:8px">16 / 20</div>
+      <div style="color:#78766f;font-size:14px;margin-bottom:34px">80 % · chapters 5–8</div>
+      <div style="display:flex;gap:46px;font-size:13px;color:#78766f;margin-bottom:34px">
+        <div><div style="font-size:21px;color:#17181a;font-family:Georgia,serif">4</div>new mistakes</div>
+        <div><div style="font-size:21px;color:#2f5c3b;font-family:Georgia,serif">6</div>cleared</div>
+        <div><div style="font-size:21px;color:#7b4141;font-family:Georgia,serif">18</div>still queued</div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <span class="btn">Practise mistakes</span><span class="btn ghost">Done</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

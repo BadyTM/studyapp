@@ -1,0 +1,27 @@
+__pycache__/
+*.py[cod]
+
+# The reader's own data: the bank, the render cache and the study material.
+# The database lives in %LOCALAPPDATA%\StudyApp, but STUDYAPP_DB can point it here.
+*.db
+*.db-wal
+*.db-shm
+cache/
+pdf_sources/
+
+# Build output
+dist/
+build/
+*.spec
+
+# Environments and editors
+.venv/
+.venv-embed/
+venv/
+.idea/
+.vscode/
+.pytest_cache/
+
+# Windows / OneDrive leftovers
+desktop.ini
+Thumbs.db

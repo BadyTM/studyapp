@@ -1,0 +1,35 @@
+6.2 Vlastnosti transakcí
+
+Transakce je posloupnost operací nad databází, která se z pohledu okolí chová jako
+jediná nedělitelná jednotka práce. Souhrnně se požadované vlastnosti označují
+zkratkou ACID. V následujících odstavcích rozebereme každou z nich zvlášť a ukážeme
+si, jakými mechanismy je systém zajišťuje.
+
+6.2.1 Atomicita
+
+Atomicita znamená, že dílčí operace transakce nelze pozorovat samostatně. Buď se
+provedou všechny, nebo žádná z nich. Pokud transakce selže uprostřed, systém vrátí
+databázi do stavu před jejím zahájením; tomu se říká rollback.
+
+6.2.2 Konzistence
+
+Konzistence zaručuje, že transakce převede databázi z jednoho konzistentního stavu
+do jiného konzistentního stavu. Integritní omezení definovaná nad schématem musí
+platit před zahájením transakce i po jejím dokončení.
+
+6.2.3 Izolace
+
+Izolace řeší vzájemné ovlivňování souběžně běžících transakcí. V ideálním případě
+se každá transakce chová tak, jako by běžela v systému sama. Míru izolace lze
+nastavovat pomocí izolačních úrovní, přičemž nižší úroveň znamená vyšší propustnost
+za cenu rizika nekonzistentního čtení.
+
+6.2.4 Trvalost
+
+Poslední z vlastností ACID se týká chování systému po potvrzení transakce. Zatímco
+izolace se zabývá souběžným během, trvalost cílí na odolnost vůči výpadku.
+
+Trvalost znamená, že po úspěšném potvrzení transakce zůstávají její změny v databázi
+zachovány i v případě následného výpadku systému. Prakticky se zajišťuje zápisem
+záznamů transakčního žurnálu na trvalé médium dříve, než je klientovi potvrzeno
+provedení operace. Tento postup se označuje jako write-ahead logging.

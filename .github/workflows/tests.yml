@@ -1,0 +1,29 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    # Windows, because the app is: the launcher, the taskbar app id and the
+    # credential store are all Windows-specific.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      # The widget tests need PySide6 itself -- conftest.py puts Qt on the
+      # offscreen platform, so no display is required, but the library is.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+
+      - name: Run the tests
+        run: pytest tests/ -q
