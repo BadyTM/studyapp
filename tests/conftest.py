@@ -37,6 +37,40 @@ def isolated_data_dir(tmp_path_factory):
     config.data_dir = real
 
 
+@pytest.fixture(autouse=True)
+def no_windows_left_behind():
+    """Closes whatever windows a test leaves open, once that test is over.
+
+    A widget built without a parent is a top-level window, and a test that built
+    one only in order to look at it has no reason to close it. They piled up: by
+    the time the style tests ran, 604 of them were still open.
+
+    That is not merely untidy. `setStyleSheet` on the application re-polishes
+    every widget in it, so the two tests that set one cost 4.3s and 1.1s inside
+    the full suite against 3.2s for their whole file run alone -- time spent
+    restyling windows nobody was looking at. Closing them takes the suite from
+    39.5s to 33s and drops both tests off the slowest list. The same pile is
+    what crashed the process on the way out; see `qapp` below.
+    """
+    yield
+
+    from PySide6.QtCore import QCoreApplication, QEvent
+    from PySide6.QtWidgets import QApplication
+
+    application = QApplication.instance()
+    if application is None:
+        return                      # a test that never needed Qt at all
+    for widget in application.topLevelWidgets():
+        widget.close()
+        widget.deleteLater()
+    application.processEvents()
+    # `deleteLater` only posts an event, and `processEvents` does not deliver
+    # that one -- Qt holds DeferredDelete back until the event loop unwinds to
+    # the level that posted it, which in a test never happens. Asked for by
+    # name, or the windows stay open and this fixture does nothing at all.
+    QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+
+
 @pytest.fixture(scope="session")
 def qapp():
     """One QApplication for the whole session -- Qt allows no more than one.
