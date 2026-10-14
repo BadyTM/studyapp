@@ -12,6 +12,7 @@ a cache and then asserts something about it passes on the second run no matter
 what the code does.
 """
 
+import gc
 import os
 
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
@@ -38,8 +39,29 @@ def isolated_data_dir(tmp_path_factory):
 
 @pytest.fixture(scope="session")
 def qapp():
-    """One QApplication for the whole session -- Qt allows no more than one."""
+    """One QApplication for the whole session -- Qt allows no more than one.
+
+    Taken down deliberately, because the tests leave windows behind. A test that
+    builds three views in order to look at them has no reason to close them, and
+    nothing else does either, so they outlive this fixture: the QApplication is
+    destroyed first and the widgets after it, which is a segfault inside Qt long
+    after the last assertion passed.
+
+    It cost a red CI run to find, and the way it failed is worth remembering.
+    The suite printed "689 passed" and the process then exited non-zero with
+    nothing said about why -- the crash happens during interpreter shutdown,
+    after pytest has written its summary and returned 0. The exit code is
+    whatever the OS makes of it: 1 on the runner, 139 and 127 here depending on
+    which file ran. A trimmed PySide6 happened not to crash at all, which is why
+    this passed locally for weeks.
+    """
     from PySide6.QtWidgets import QApplication
 
     application = QApplication.instance() or QApplication([])
     yield application
+
+    for widget in application.topLevelWidgets():
+        widget.close()
+        widget.deleteLater()
+    application.processEvents()     # deleteLater is a promise, not a deletion
+    gc.collect()
