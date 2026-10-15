@@ -64,7 +64,7 @@ The launcher looks for the interpreter in `STUDYAPP_VENV`, then `.venv` beside t
 project, then `%LOCALAPPDATA%\StudyApp\venv` — double-clicking a `.pyw` hands it to the
 *system* `pythonw.exe`, which has no PySide6, so the first thing it does is hand itself
 over to the right one. Keeping the environment outside the project is not a detail here:
-PySide6 alone is some 660 MB and this project sits inside OneDrive.
+PySide6 alone is some 350 MB and this project sits inside OneDrive.
 
 The database and the render cache live in `%LOCALAPPDATA%\StudyApp`, never in the project
 folder, for the same reason — OneDrive syncing a WAL-mode SQLite file mid-write is a

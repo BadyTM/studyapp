@@ -81,18 +81,25 @@ Dvě věci, se kterými je potřeba počítat:
 `assets/studyapp.ico` proto nemazat — visí na něm i ikona okna a taskbaru
 (`config.icon_path()`).
 
-**Qt je v `.venv` ořezané.** Z PySide6 je odstraněno ~505 MB, které appka nikdy
-nenačte: WebEngine (Chromium, 203 MB + 106 MB dat), Qt překlady, QML, Quick3D,
-Multimedia, Charts, 3D, Designer a video kodeky. Appka importuje jen `QtCore`,
-`QtGui`, `QtWidgets`, `QtPdf` a `QtPdfWidgets`; `QtPdf` bohužel bydlí
-v `PySide6-Addons` spolu s WebEnginem, takže odinstalovat celý balík nejde.
-Ověřeno po ořezu: testy prochází, PDF se renderuje, dialogy fungují.
+**Qt se neinstaluje celé.** `requirements.txt` nežádá meta-balíček `PySide6`,
+ale `PySide6-Essentials` + `PySide6-Pdf`. Appka importuje jen `QtCore`, `QtGui`,
+`QtWidgets` (Essentials) a `QtPdf`, `QtPdfWidgets` (Pdf), a `PySide6-Pdf` závisí
+pouze na Essentials — ne na Addons. Meta-balíček by přitáhl Addons a s ním
+`pyside6_webengine`, celý Chromium o 125 MB, který se nikdy nenačte.
 
-Počítej s tím, že **upgrade nebo `--force-reinstall` PySide6 to celé vrátí** —
-běžné `pip install -r requirements.txt` ne, to vidí verzi jako splněnou. Po
-reinstalaci se ořez buď udělá znovu, nebo se nechá být; je to jen místo na disku.
+    PySide6 (vše)        295 MB ke stažení, 879 MB na disku
+    Essentials + Pdf     131 MB ke stažení, 445 MB na disku
 
-**Virtualenv patří mimo OneDrive.** I po ořezu má 361 MB a v `.venv` uvnitř
+Ověřeno v čistém prostředí bez WebEnginu a Addons: 689 testů prochází, okno
+nastartuje, PDF se najde a renderuje.
+
+Dřív to tak nešlo a v tomhle souboru stál návod, jak z nainstalovaného PySide6
+ručně vyřezat ~505 MB — `QtPdf` tehdy bydlel v `PySide6-Addons` spolu
+s WebEnginem. **Od 6.12 je `PySide6_Pdf` samostatné kolo**, takže ruční ořez
+není potřeba a nic ho nevrátí zpátky. Pokud ti v `.venv` zbyl ořezaný PySide6
+z dřívějška, nech ho být, nebo prostředí postav znovu.
+
+**Virtualenv patří mimo OneDrive.** I bez WebEnginu má 445 MB a v `.venv` uvnitř
 projektu to OneDrive donekonečna synchronizuje. Launcher hledá interpret
 postupně v `STUDYAPP_VENV`, pak v `.venv` u projektu, pak
 v `%LOCALAPPDATA%\StudyApp\venv`. Přesun:

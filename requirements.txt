@@ -1,6 +1,11 @@
 # Runtime and generation. Deduplication has its own virtualenv (see studyapp/embed),
 # and the tests need pytest, which the app itself does not.
-PySide6>=6.8
+# Not the `PySide6` meta-package: that pulls in Addons and, with it, a 125 MB
+# WebEngine wheel -- a whole Chromium this app never loads. It imports QtCore,
+# QtGui, QtWidgets (Essentials) and QtPdf, QtPdfWidgets (Pdf), and PySide6-Pdf
+# depends on Essentials alone. 131 MB to install rather than 295.
+PySide6-Essentials>=6.8
+PySide6-Pdf>=6.8
 pymupdf>=1.24
 anthropic>=0.40
 alembic>=1.13
