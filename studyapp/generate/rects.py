@@ -179,13 +179,3 @@ def locate(
     return best_page, best_rects
 
 
-def locate_all(path, chunk_page_start: int, chunk_page_end: int,
-               quotes: list[str]) -> list[tuple[int | None, list[list[float]]]]:
-    """Locates several quotes in one open of the document.
-
-    Opening a 200-page PDF per question is the difference between a generation
-    run that takes minutes and one that takes an afternoon.
-    """
-    with pymupdf.open(path) as document:
-        return [locate(document, chunk_page_start, chunk_page_end, quote)
-                for quote in quotes]

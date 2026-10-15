@@ -200,8 +200,8 @@ def main(argv: list[str] | None = None) -> int:
         if not duplicates:
             return 0
 
-        retired = repo.deactivate_questions(
-            connection, [duplicate.drop_id for duplicate in duplicates])
+        retired = repo.set_active(
+            connection, [duplicate.drop_id for duplicate in duplicates], False)
         print(f"\nRetired {retired} questions (is_active = 0; nothing was deleted).")
         print(f"{repo.count_questions(connection)} active questions remain.")
         return 0

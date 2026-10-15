@@ -195,15 +195,15 @@ class TestQuestions:
 
     def test_needs_review_catches_a_missing_page(self, database, chunk):
         repo.insert_questions(database, chunk, [question(page=None)])
-        assert len(repo.needs_review(database)) == 1
+        assert len(repo.search_questions(database, state="review")) == 1
 
     def test_needs_review_catches_a_weak_quote_match(self, database, chunk):
         repo.insert_questions(database, chunk, [question(quote_score=0.91)])
-        assert len(repo.needs_review(database)) == 1
+        assert len(repo.search_questions(database, state="review")) == 1
 
     def test_a_clean_question_needs_no_review(self, database, chunk):
         repo.insert_questions(database, chunk, [question()])
-        assert repo.needs_review(database) == []
+        assert repo.search_questions(database, state="review") == []
 
     def test_question_counts_appear_beside_their_chunk(self, database, document, chunk):
         repo.insert_questions(database, chunk, [question(), question()])

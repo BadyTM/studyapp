@@ -176,21 +176,21 @@ class TestStorage:
         # attempts hang off these rows; deleting would lose history or break the
         # foreign key.
         ids = [row["id"] for row in repo.questions_for_embedding(database)][:2]
-        repo.deactivate_questions(database, ids)
+        repo.set_active(database, ids, False)
 
         assert repo.count_questions(database, active_only=True) == 1
         assert repo.count_questions(database, active_only=False) == 3
 
     def test_retiring_can_be_undone(self, database):
         ids = [row["id"] for row in repo.questions_for_embedding(database)][:2]
-        repo.deactivate_questions(database, ids)
-        repo.reactivate_questions(database, ids)
+        repo.set_active(database, ids, False)
+        repo.set_active(database, ids, True)
         assert repo.count_questions(database, active_only=True) == 3
 
     def test_retiring_nothing_is_harmless(self, database):
-        assert repo.deactivate_questions(database, []) == 0
+        assert repo.set_active(database, [], False) == 0
 
     def test_a_retired_question_is_never_practised(self, database):
         ids = [row["id"] for row in repo.questions_for_embedding(database)]
-        repo.deactivate_questions(database, ids[:2])
+        repo.set_active(database, ids[:2], False)
         assert len(repo.pick_questions(database, limit=10)) == 1

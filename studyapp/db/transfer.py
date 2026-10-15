@@ -48,11 +48,6 @@ class ImportReport:
     filenames: list[str] = field(default_factory=list)
     needs_pdf: list[str] = field(default_factory=list)
 
-    @property
-    def anything_added(self) -> bool:
-        return bool(self.questions_added or self.chunks_added
-                    or self.documents_added)
-
 
 # --- writing ----------------------------------------------------------------
 

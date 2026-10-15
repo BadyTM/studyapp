@@ -252,21 +252,6 @@ def count_questions(connection: sqlite3.Connection, active_only: bool = True,
     return int(connection.execute(sql, parameters).fetchone()["n"])
 
 
-def needs_review(connection: sqlite3.Connection) -> list[sqlite3.Row]:
-    """Questions worth reading by hand before they are trusted.
-
-    A quote that could not be located in the PDF is not merely a missing
-    highlight -- it usually means the model paraphrased, which means the question
-    may not be answerable from the text at all.
-    """
-    return connection.execute(
-        """SELECT * FROM questions
-           WHERE is_active = 1
-             AND (rects_json IS NULL OR page IS NULL OR quote_score < 0.95)
-           ORDER BY quote_score IS NOT NULL, quote_score"""
-    ).fetchall()
-
-
 # --- picking questions to practise ------------------------------------------
 
 # Everything the quiz needs about a question, including where it came from. The
@@ -308,10 +293,32 @@ def list_chapters(connection: sqlite3.Connection,
     return connection.execute(sql, parameters).fetchall()
 
 
+MISTAKES = """q.id IN (
+                   SELECT a.question_id FROM attempts a
+                   WHERE a.id = (SELECT MAX(id) FROM attempts
+                                 WHERE question_id = a.question_id)
+                     AND a.is_correct = 0
+               )"""
+
+
 def mistakes_count(connection: sqlite3.Connection,
                    document_id: int | None = None) -> int:
-    return len(pick_questions(connection, source="mistakes", limit=None,
-                              document_id=document_id))
+    """How many questions the mistakes queue is holding.
+
+    Counted rather than fetched. This used to be `len(pick_questions(...))`,
+    which asks the same question but builds every row to throw all of them
+    away -- and shuffles them on the way, because that is what picking a session
+    needs and counting does not. On a bank of 20,000 questions that was 7,545
+    rows and 54ms for a number in a label.
+    """
+    sql = f"""SELECT COUNT(*) FROM questions q
+              JOIN chunks c ON c.id = q.chunk_id
+              WHERE q.is_active = 1 AND {MISTAKES}"""
+    parameters: list[Any] = []
+    if document_id is not None:
+        sql += " AND c.document_id = ?"
+        parameters.append(document_id)
+    return connection.execute(sql, parameters).fetchone()[0]
 
 
 def pick_questions(
@@ -342,15 +349,9 @@ def pick_questions(
 
     if source == "mistakes":
         # The newest attempt at each question decides. Answer it right and it
-        # drops out by itself.
-        where.append(
-            """q.id IN (
-                   SELECT a.question_id FROM attempts a
-                   WHERE a.id = (SELECT MAX(id) FROM attempts
-                                 WHERE question_id = a.question_id)
-                     AND a.is_correct = 0
-               )"""
-        )
+        # drops out by itself. Shared with `mistakes_count`, which counts the
+        # same queue -- two spellings of one rule would drift.
+        where.append(MISTAKES)
     elif source == "starred":
         where.append("q.starred = 1")
     elif source == "chapter":
@@ -502,29 +503,6 @@ def store_embeddings(connection: sqlite3.Connection,
     )
     connection.commit()
     return len(embeddings)
-
-
-def deactivate_questions(connection: sqlite3.Connection,
-                         question_ids: Sequence[int]) -> int:
-    """Retires questions. Never deletes -- attempts hang off these rows."""
-    if not question_ids:
-        return 0
-    cursor = connection.executemany(
-        "UPDATE questions SET is_active = 0 WHERE id = ?",
-        [(question_id,) for question_id in question_ids],
-    )
-    connection.commit()
-    return cursor.rowcount
-
-
-def reactivate_questions(connection: sqlite3.Connection,
-                         question_ids: Sequence[int]) -> int:
-    connection.executemany(
-        "UPDATE questions SET is_active = 1 WHERE id = ?",
-        [(question_id,) for question_id in question_ids],
-    )
-    connection.commit()
-    return len(question_ids)
 
 
 # --- statistics -------------------------------------------------------------

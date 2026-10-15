@@ -97,11 +97,3 @@ def has_text_layer(pages: list[PageText], threshold: int = 20) -> bool:
     text that would not be there.
     """
     return any(page.word_count >= threshold for page in pages)
-
-
-def extract_words(page: "pymupdf.Page") -> list[tuple]:
-    """Words with coordinates, for the highlight-rectangle pass in phase 5.
-
-    Each entry is (x0, y0, x1, y1, word, block_no, line_no, word_no).
-    """
-    return page.get_text("words")
