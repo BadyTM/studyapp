@@ -109,6 +109,13 @@ def upgrade() -> None:
     op.execute("CREATE INDEX idx_questions_active ON questions(is_active, type)")
     # Supports the mistakes-queue lookup of the newest attempt per question.
     op.execute("CREATE INDEX idx_attempts_question ON attempts(question_id, id)")
+    # And this one covers the per-chapter accuracy on the Progress tab, which
+    # sums is_correct per question. Without it that sum is an index lookup plus
+    # a row read for every attempt there is: measured on 20,000 questions and
+    # 60,000 attempts, 122ms against 34ms. Widening the index above to carry
+    # is_correct instead was tried and is worse for this query (54ms) -- the
+    # scan reads the id column it has no use for.
+    op.execute("CREATE INDEX idx_attempts_correct ON attempts(question_id, is_correct)")
 
 
 def downgrade() -> None:
