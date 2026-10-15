@@ -352,7 +352,7 @@ clauses are decoration.
 ## Tests
 
     pip install pytest
-    pytest tests/          689 tests
+    pytest tests/          703 tests
 
 No tokens are spent: both backends are faked. The widget tests run on Qt's offscreen
 platform, set in `conftest.py` before anything imports Qt, so the whole suite runs
