@@ -4,6 +4,14 @@ on:
   push:
   pull_request:
 
+# A second push while the first is still running makes the first one pointless:
+# nobody reads a result for a commit that has been replaced. The Windows runner
+# takes six to eleven minutes a go, so letting both finish wastes the slower
+# half of that.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     # Windows, because the app is: the launcher, the taskbar app id and the
