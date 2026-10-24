@@ -1,4 +1,4 @@
-# Připojení na Claude — dvě cesty, jedno rozhraní
+# Připojení na Claude: dvě cesty, jedno rozhraní
 
 Zjištěno z `the-narrator`, kde už obojí běží. Platí pro fázi 3 a 4.
 
@@ -24,7 +24,7 @@ def find_claude():
 ```
 
 Podproces se pouští v **prázdné stabilní složce** (`%LOCALAPPDATA%\studyapp\claude`),
-ne v projektu — jinak si Claude Code načte kontext repozitáře a začne se chovat
+ne v projektu. Jinak si Claude Code načte kontext repozitáře a začne se chovat
 jako programátorský asistent. A `--disallowedTools` na všechno, co by se ptalo
 na oprávnění.
 
@@ -38,7 +38,7 @@ znamená požádat o JSON blok v odpovědi a parsovat ho tolerantně.
 Není to tak křehké, jak to zní: `validate.py` stejně každou otázku prověřuje
 proti textu chunku a vadné zahazuje, takže špatně naparsovaná odpověď skončí
 jako `skipped` nebo `failed` chunk, ne jako smetí v bance. **Na API cestě ale
-zůstane skutečné tool schema** — plán ho vyžaduje a je spolehlivější.
+zůstane skutečné tool schema**: plán ho vyžaduje a je spolehlivější.
 
 Obě cesty tedy vracejí stejný `list[dict]` a `validate.py` je za nimi společné.
 
@@ -53,7 +53,7 @@ odpadá dlouhoběžící proces i `build_recap()`. Jeden `claude -p` na chunk,
 `--output-format json`, přečíst pole `result`.
 
 **4 · Paralelismus je dražší.** Na API cestě je 4 souběžných volání triviální.
-Na cestě přes předplatné je to 4 procesy Claude Code najednou — funguje, ale
+Na cestě přes předplatné je to 4 procesy Claude Code najednou. Funguje to, ale
 startuje pomaleji a naráží na jiné limity. Zvaž `MAX_PARALLEL_CHUNKS` nižší,
 když jede předplatné.
 
@@ -61,10 +61,10 @@ když jede předplatné.
 
 - **Počítadlo tokenů od začátku.** The-narrator má `Costs` pro API (odhad v dolarech
   z cen za milion tokenů) a `SubscriptionCosts` pro předplatné (tahy a tokeny,
-  dolary tam nedávají smysl). Plán fáze 3 to chce taky — při ladění promptu
+  dolary tam nedávají smysl). Plán fáze 3 to chce taky: při ladění promptu
   pustíš průchod víckrát, než čekáš.
-- **`describe_error()`** — jedno místo, které z výjimky udělá jednu větu pro uživatele.
+- **`describe_error()`**: jedno místo, které z výjimky udělá jednu větu pro uživatele.
   `anthropic.APIStatusError` nese stavový kód, který stojí za zobrazení.
 - **`anthropic` jako volitelný import.** `try: import anthropic / except ImportError`
   a `AVAILABLE = anthropic is not None`. Kdo generuje přes předplatné, balíček
-  nepotřebuje — a hotová appka ho nepotřebuje vůbec.
+  nepotřebuje, a hotová appka ho nepotřebuje vůbec.

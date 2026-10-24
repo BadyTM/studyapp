@@ -219,6 +219,7 @@ Everything you double-click sits at the top; the code lives one level down.
 
     config.py               paths, model, thresholds, where the API key comes from
     main.py                 starts the application
+    __main__.py             what `python -m studyapp` runs, five lines of it
 
     ingest/     extract.py      text and typographic lines, per page
                 chunker.py      pages -> chunks, broken on chapter headings
@@ -396,7 +397,7 @@ before building anything distributable from it:
 |---|---|---|
 | **PyMuPDF** | AGPL-3.0, or a commercial licence from Artifex | strong copyleft; it reaches the combined work |
 | **PySide6 / Qt** | LGPL-3.0 | relinking must stay possible for whoever you give it to |
-| anthropic, alembic, keyring, numpy, pillow | MIT / BSD / HPND | permissive |
+| anthropic, alembic, keyring, numpy, pillow | MIT / BSD / MIT-CMU | permissive |
 
 Publishing this repository is unaffected: what is distributed here is StudyApp's own
 source, and PyMuPDF arrives on your machine from PyPI under its own terms. A question

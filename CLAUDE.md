@@ -90,7 +90,7 @@ pouze na Essentials, ne na Addons. Meta-balíček by přitáhl Addons a s ním
     PySide6 (vše)        295 MB ke stažení, 879 MB na disku
     Essentials + Pdf     131 MB ke stažení, 445 MB na disku
 
-Ověřeno v čistém prostředí bez WebEnginu a Addons: 689 testů prochází, okno
+Ověřeno v čistém prostředí bez WebEnginu a Addons: 703 testů prochází, okno
 nastartuje, PDF se najde a renderuje.
 
 Dřív to tak nešlo a v tomhle souboru stál návod, jak z nainstalovaného PySide6
