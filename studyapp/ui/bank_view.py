@@ -190,7 +190,7 @@ class EditDialog(QDialog):
         self.correct_group = QButtonGroup(self)
 
         if self.is_mcq:
-            layout.addWidget(self._label(self.tr("Options — select the correct one")))
+            layout.addWidget(self._label(self.tr("Options: select the correct one")))
             existing = json.loads(row["options_json"]) if row["options_json"] else []
             for index in range(4):
                 line = QHBoxLayout()
@@ -216,7 +216,7 @@ class EditDialog(QDialog):
         # Shown because it is the anchor for everything else, and read-only
         # because editing it would break the link to the page it was found on.
         layout.addWidget(self._label(
-            self.tr("Source quote — read-only, page {0}").format(
+            self.tr("Source quote, read-only, page {0}").format(
                 row["page"] + 1 if row["page"] is not None else "?")))
         quote = QPlainTextEdit(row["source_quote"])
         quote.setReadOnly(True)
@@ -870,5 +870,5 @@ class BankView(QWidget):
         self.refresh()
         self.changed.emit()
         self.count.setText(
-            self.tr("Removed {0} — {1} questions and {2} page previews with it.")
+            self.tr("Removed {0}: {1} questions and {2} page previews with it.")
             .format(document["filename"], history["questions"], freed or pages))
